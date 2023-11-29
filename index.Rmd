@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Thomas Batties"
 description: "My final project"
 output:
   distill::distill_article:
@@ -8,7 +8,27 @@ output:
 ---
 
 
-
 ## Project thoughts
 
-I am interested in exploring data related to...
+I am interested in researching how, in the NBA, minutes per game affects offensive rebounds per game.
+
+
+Does a player's minutes per game affect their RAPTOR +/-? In this study, I will examine the possible correlation between these two statistics. For context, RAPTOR +/- is a basketball-exclusive stat that measures by how many points a player boosts or hinders their team's performance. My hypothesis is that  a player who receives more minutes per game will have a higher RAPTOR +/-. Generally, better players will play more in a game, and they will have more of a positive effect on the game then their teammates who play less. Since a player's opportunity to record RAPTOR +/- is heavily dependent upon how many minutes they get, minutes is the explanatory variable. The outcome variable is RAPTOR +/-. The data would reflect my hypothesis if it showed a direct positive correlation between minutes per game and RAPTOR +/-.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+nba <- read_csv("nba-data-historical.csv")
+nba
+```
+
+
+```{r}
+plot1 <- nba |> 
+  group_by(age) |>
+  ggplot(data = nba,
+         mapping = aes(x = `Raptor+/-`,
+                       y = MPG)) + geom_point(alpha = 0.5)
+
+plot1
+```

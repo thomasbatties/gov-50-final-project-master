@@ -10,17 +10,29 @@ output:
 
 ## Project thoughts
 
-I am interested in researching how, in the NBA, minutes per game affects offensive rebounds per game.
 
 
-Does a player's minutes per game affect their RAPTOR +/-? In this study, I will examine the possible correlation between these two statistics. For context, RAPTOR +/- is a basketball-exclusive stat that measures by how many points a player boosts or hinders their team's performance. My hypothesis is that  a player who receives more minutes per game will have a higher RAPTOR +/-. Generally, better players will play more in a game, and they will have more of a positive effect on the game then their teammates who play less. Since a player's opportunity to record RAPTOR +/- is heavily dependent upon how many minutes they get, minutes is the explanatory variable. The outcome variable is RAPTOR +/-. The data would reflect my hypothesis if it showed a direct positive correlation between minutes per game and RAPTOR +/-.
+Is a NBA player's minutes per game affected more by their RAPTOR +/- or their True Shooting percentage? In this study, I will examine the possible correlation between a player's minutes per game and these two statistics. For context, RAPTOR +/- is a basketball-exclusive stat that measures by how many points a player boosts or hinders their team's performance. True Shooting percentage is also basketball-exclusive, and it measures scoring efficiency while accounting for the point value of three pointers and free throws. Just like normal shooting metrics, you want to shoot as high of a percentage as possible. I hypothesize that, generally, a player who receives more minutes per game will have a higher RAPTOR +/- and True Shooting percentage. Generally, better players will play more in a game, and they will have more of a positive effect on the game then their teammates who play less. These players are also normally better, more efficient scorers. Since a player's opportunity to record both RAPTOR +/- and an accurate True Shooting percentage is heavily dependent upon how many minutes they get, minutes is the explanatory variable. The outcome variables are True Shooting percentage and RAPTOR +/-. The data would reflect my hypothesis if it showed a direct positive correlation of minutes per game to True Shooting percentage and RAPTOR +/-.
 
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
+library(haven)
 nba <- read_csv("nba-data-historical.csv")
 nba
 ```
+
+---
+
+
+## Data
+
+
+The data used for this project comes from the 2019-2020 NBA season, which was a peculiar season due to the COVID-19 pandemic derailing the entire league for some months. This significantly reduced the amount of regular season games played during the season by around twenty games. Nonetheless, some very valuable stats were recorded that can help us learn more about which players contribute to their respective teams the most. Analyzing the correlation of minutes per game to True Shooting percentage and RAPTOR +/- can show us if certain teams are giving the most minutes to those whose presence benefits the team the most. The independent variable in this data source is minutes per game, as there is no other stat that manipulates minutes per game. A player's presence, or lack thereof, in the game is the most basic stat. The dependent variables are True Shooting percentage and RAPTOR +/-, as, generally, a player's ability to take shots and impact the game, whether positively or negatively, is heavily dependent upon whether or not they are given the opportunity to play and how much they play.
+
+These variables are measured by building two scatter plots that both record every player who was on an NBA roster during the 2019-2020 season. The players are organized on the first plot based on how many minutes they averaged and their Raptor +/-. Plot 1 is examining whether those with a higher Raptor +/- generally play more minutes per game. Plot 2 is examining whether those with a higher True Shooting percentage generally play more minutes per game. The acronym "MPG" stands for minutes per game, and the acronym "TS%" stands for True Shooting percentage.
+
 
 
 ```{r}
@@ -28,20 +40,44 @@ plot1 <- nba |>
   group_by(age) |>
   ggplot(data = nba,
          mapping = aes(x = `Raptor+/-`,
-                       y = MPG)) + geom_point(alpha = 0.5)
+                       y = MPG)) + geom_point(alpha = 0.25) + geom_smooth() + labs(title = 'Plot 1: Correlation Between Minutes per Game and Raptor +/-')
 
 plot1
 ```
 
 
+```{r}
+
+plot2 <- nba |> 
+  group_by(age) |>
+  ggplot(data = nba,
+         mapping = aes(x = `TS%`,
+                       y = `MPG`)) + geom_point(alpha = 0.25) + geom_smooth() + labs(title = 'Plot 2: Correlation Between Minutes per Game and True Shooting Percentage')
+
+plot2
+
+```
 
 
+---
 
 
+## Results Analysis
 
 
+Starting with Plot 1, we are given the results to the correlation between minutes per game and Raptor +/-. The plot shows that the coefficient of interest, Raptor +/-, steadily increases as the players' minutes increase. This indicates that there is a direct positive correlation between minutes per game and Raptor +/-. The line of best fit displays that pattern, but it also shows that some of the stats are distorted outliers, which is a very natural occurrence when analyzing basketball statistics. Some players play for very small amounts of time at the ends of games when their team is losing or winning by a lot of points. Because they are in the games for only two or three minutes while their team is dominating or being dominated, their Raptor +/- can get disproportionately high or low compared to their minutes per game. However, these are only outliers that do not hold any weight in the statistical significance of the plot. The fact that the plot visibly displays that direct positive correlation is enough to label the results as statistically significant
 
 
+Next, plot 2 gives us the results to the correlation between minutes per game and True Shooting percentage. The coefficient of interest, True Shooting percentage, also steadily increases as the players' minutes per game increase, indicating a direct positive correlation between minutes per game and True Shooting percentage. Similar to the plot 1, the line of best fit displays the same direct positive correlation as the raw plot, but reveals some distorted outliers. This is caused by a similar situation as plot 1. When players who don't play much play for a small amount of minutes and shoot once or twice, it can cause their True Shooting percentage to be disproportionately high or low compared to their minutes per game depending on how many of those shots they make. These outliers also hold no weight in the statistical significance, and because the direct positive correlation is visible, we can confidently label the results as statistically significant. Through further research, I was also able to find out that the league average for true shooting percentage is around 58 percent, which is around the same exact area in which the peak of the line is.
+
+
+---
+
+
+## Conclusion
+
+
+The results of both plots displayed two direct positive correlations between minutes per game and the two coefficients of interest, Raptor +/- and True Shooting percentage. This means that my hypothesis that, generally, players' True Shooting percentage and Raptor +/- would increase with their minutes per game, was correct. I used a line of best fit to further detail the correlation and confirm that what I saw on the raw scatter plot was correct. Knowing the context of the outliers helped make sure there was no room for confusion about the results. If I had more time and/or money, I would use more recent and specific statistics with limitations to get rid of distorted statistics. However, I was able to conduct a relatively clean analysis as is.
 
 
 
